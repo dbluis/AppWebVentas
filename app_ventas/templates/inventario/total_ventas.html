@@ -1,0 +1,27 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h1>Total de Ventas del Día</h1>
+    <form method="get" action="">
+      {{ formd.as_p }}
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <p>
+      <strong>Total Vendido el {{ form.date.value }}:</strong> ${{ ventas_dia }}
+    </p>
+  </section>
+  <section class="card card-body my-3">
+    <h1>Total de Ventas del Mes</h1>
+    <form method="get" action="">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <p>
+      <strong
+        >Total Vendido en {{ form.month.value }}/{{ form.year.value }}:</strong
+      >
+      ${{ ventas_mes }}
+    </p>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>signin</title>
+  </head>
+
+  <body>
+    {% extends "layout/base.html" %} {% block content %}
+    <main class="container">
+      <div class="row">
+        <div class="col-md-4 offset-md-4 mt-5">
+          <form method="POST" class="card card-body text-dark">
+            <h1 class="text-center">Iniciar sesion</h1>
+            {% csrf_token %} {{error}}
+            <div class="mb-3">
+              <label for="username">Usuario:</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="form-control"
+                placeholder="Escribe tu nombre de usuario"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password">Contraseña:</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                placeholder="Escribe tu contraseña"
+              />
+            </div>
+            <button class="btn btn-dark">Enviar</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    {% endblock %}
+  </body>
+</html>

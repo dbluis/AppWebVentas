@@ -1,0 +1,86 @@
+{% extends 'layout/base.html' %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ titulo }}</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+  </head>
+  {% block content %}
+  <body>
+    <main class="container py-3 my-3">
+      <section class="card card-body">
+
+        <!-- Formulario para seleccionar Año -->
+        <form method="GET" action="{% url 'ver_ventas_anuales' %}" class="form-inline mb-3 d-flex justify-content-left">
+          <div class="form-group mr-2 mx-2">
+            <label for="ano" class="mr-2">Año:</label>
+            <select name="ano" id="ano" class="form-control">
+              {% for ano in available_years %}
+                <option value="{{ ano }}" {% if ano == selected_year %}selected{% endif %}>
+                  {{ ano }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+        <!-- Fin del Formulario -->
+
+        <div id="container"></div>
+      </section>
+    </main>
+    <script>
+      Highcharts.chart('container', {
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: '{{ titulo }}'
+          },
+          xAxis: {
+              type: 'category',
+              labels: {
+                  autoRotation: [-45, -90],
+                  style: {
+                      fontSize: '13px',
+                      fontFamily: 'Verdana, sans-serif'
+                  }
+              }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Valores $'
+              }
+          },
+          legend: {
+              enabled: false
+          },
+          tooltip: {
+              pointFormat: 'Valores $: <b>{point.y:.2f}</b>'
+          },
+          series: [{
+              name: 'Ventas',
+              colorByPoint: true,
+              data: {{ ventas_data|safe }},
+              dataLabels: {
+                  enabled: true,
+                  rotation: -90,
+                  color: '#FFFFFF',
+                  inside: true,
+                  verticalAlign: 'top',
+                  format: '{point.y:.2f}', // dos decimales
+                  y: 10, // 10 píxeles desde la parte superior
+                  style: {
+                      fontSize: '13px',
+                      fontFamily: 'Verdana, sans-serif'
+                  }
+              }
+          }]
+      });
+    </script>
+  </body>
+</html>
+{% endblock %}

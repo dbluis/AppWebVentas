@@ -1,0 +1,34 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h1>Lista de Gastos</h1>
+    <a href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Monto</th>
+          <th>Fecha</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gasto in gastos %}
+        <tr>
+          <td>{{ gasto.descripcion }}</td>
+          <td>{{ gasto.monto }}</td>
+          <td>{{ gasto.fecha_gasto }}</td>
+          <td>
+            <form action="{% url 'editar_gasto' gasto.id %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-dark">Editar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+
+{% endblock %}

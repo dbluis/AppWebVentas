@@ -1,0 +1,215 @@
+{% extends "layout/base.html" %} 
+  <body>
+    {% block content %}
+    <main class="container py-5">
+      <section class="card card-body">
+        <h2>Carrito de Compras</h2>
+        <table class="table" id="carrito-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th class="text-center">Cantidad</th>
+              <th class="d-none d-md-table-cell">Subtotal</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in carrito.items.all %}
+            <tr>
+              <td>{{ item.bebida.nombre }}</td>
+              <td>
+                <div class="input-group cantidad-input-group mx-auto">
+                  <div class="input-group-prepend px-1">
+                    <button
+                      class="btn btn-danger px-2"
+                      onclick="cambiarCantidad({{ item.id }}, 'decrementar')"
+                    >
+                      -
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control text-center"
+                    id="cantidad-{{ item.id }}"
+                    value="{{ item.cantidad }}"
+                    readonly
+                  />
+                  <div class="input-group-append px-1">
+                    <button
+                      class="btn btn-success px-2"
+                      onclick="cambiarCantidad({{ item.id }}, 'incrementar')"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td class="d-none d-md-table-cell" id="subtotal-{{ item.id }}">
+                {{ item.subtotal }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-danger d-none d-md-inline"
+                  onclick="eliminarDelCarrito({{ item.id }})"
+                >
+                  Eliminar
+                </button>
+                <button
+                  class="btn btn-danger d-md-none"
+                  onclick="eliminarDelCarrito({{ item.id }})"
+                >
+                  X
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div>
+          <h3>
+            <strong>Total: </strong>
+            <span id="total-precio">{{ total_precio }}</span>
+          </h3>
+        </div>
+        <button class="btn btn-primary btn-input-group" onclick="completarCompra()">
+          Completar Compra
+        </button>
+
+        <h1 class="text-center my-3">Lista de Productos</h1>
+        <form
+          class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+          method="GET"
+        >
+          {% csrf_token %}
+          <div class="input-group buscar-input-group">
+            <input
+              type="text"
+              class="form-control bg-light border-0 small"
+              placeholder="Buscar..."
+              name="buscar"
+              value=""
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="submit">
+                Buscar
+              </button>
+            </div>
+          </div>
+        </form>
+        <a class="btn btn-primary d-inline-block ml-auto my-3" href="{% url 'agregar_bebida' %}">Agregar nuevo producto</a>
+
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Agregar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for bebida in bebidas %}
+            <tr>
+              <td><b>{{ bebida.nombre|capfirst }}</b></td>
+              <td>{{ bebida.precio }}</td>
+              <td>
+                <form
+                  action="{% url 'editar_bebida' bebida.id %}"
+                  method="POST"
+                >
+                  {% csrf_token %}
+                  <button class="btn btn-dark">Editar</button>
+                </form>
+              </td>
+              <td>
+                <button
+                  class="btn btn-success"
+                  onclick="agregarAlCarrito({{ bebida.id }})"
+                >
+                  Agregar
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <script>
+      function agregarAlCarrito(bebidaId) {
+        fetch("{% url 'agregar_al_carrito' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: new URLSearchParams({
+            bebida_id: bebidaId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.error) {
+              actualizarCarrito(data.total_items, data.total_precio);
+              location.reload(); // Recarga la página para ver el cambio en el carrito
+            } else {
+              console.error(data.error);
+            }
+          });
+      }
+
+      function actualizarCarrito(totalItems, totalPrecio) {
+        document.getElementById("total-precio").innerText = totalPrecio;
+      }
+
+      function cambiarCantidad(itemId, accion) {
+        fetch("{% url 'cambiar_cantidad_carrito' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: new URLSearchParams({
+            item_id: itemId,
+            accion: accion,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById(`cantidad-${itemId}`).value = data.cantidad;
+            document.getElementById(`subtotal-${itemId}`).innerText =
+              data.subtotal;
+            document.getElementById("total-precio").innerText =
+              data.total_precio;
+          });
+      }
+
+      function eliminarDelCarrito(itemId) {
+        fetch("{% url 'eliminar_del_carrito' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: new URLSearchParams({
+            item_id: itemId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.error) {
+              location.reload();
+            } else {
+              console.error(data.error);
+            }
+          });
+      }
+
+      function completarCompra() {
+        window.location.href = "{% url 'completar_compra' %}";
+      }
+    </script>
+    {% endblock content %}
+  </body>
+</html>

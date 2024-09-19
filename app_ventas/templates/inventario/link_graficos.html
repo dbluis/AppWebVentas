@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h2>Graficos</h2>
+    <h4>Haga click en los botones para ver los graficos</h4>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <ul class="list-group">
+          <li class="list-group-item my-2 text-center">
+            <a class="btn btn-dark btn-lg" href="{% url 'ver_ventas_anuales' %}"
+              >Ver ventas del año</a
+            >
+          </li>
+          <li class="list-group-item my-2 text-center">
+            <a
+              class="btn btn-secondary btn-lg"
+              href="{% url 'ver_gastos_anuales' %}"
+              >Ver gastos del año</a
+            >
+          </li>
+          <li class="list-group-item my-2 text-center">
+            <a
+              class="btn btn-dark btn-lg"
+              href="{% url 'ver_ventas_mensuales' %}"
+              >Ver ventas del mes</a
+            >
+          </li>
+          <li class="list-group-item my-2 text-center">
+            <a
+              class="btn btn-secondary btn-lg"
+              href="{% url 'ver_gastos_mensuales' %}"
+              >Ver gastos del mes</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

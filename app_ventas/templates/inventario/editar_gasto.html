@@ -1,0 +1,49 @@
+{% extends "layout/base.html" %} {% block content %}
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <form
+        method="post"
+        action="{% url 'editar_gasto' gasto.id %}"
+        class="card card-body"
+      >
+        <h1>Modificar Gasto</h1>
+        {% csrf_token %}
+
+        <div style="margin-bottom: 10px">
+          <label for="id_descripcion">Descripcion:</label>
+          <input
+            type="text"
+            name="descripcion"
+            id="id_descripcion"
+            value="{{ form.descripcion.value|default:gasto.descripcion }}"
+            class="form-control"
+          />
+        </div>
+
+        <div style="margin-bottom: 10px">
+          <label for="id_descripcion">Monto:</label>
+          <input
+            type="number"
+            name="monto"
+            id="id_monto"
+            value="{{ form.monto.value|default:gasto.monto }}"
+            class="form-control"
+          />
+        </div>
+        <button type="submit" class="btn btn-dark">Guardar</button>
+      </form>
+      <form
+        action="{% url 'eliminar_gasto' gasto.id %}"
+        method="POST"
+        onsubmit="return confirm('¿Estás seguro de que deseas eliminar este gasto?');"
+      >
+        {% csrf_token %}
+        <button class="btn btn-danger card card-body my-2">Eliminar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

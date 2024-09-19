@@ -1,0 +1,35 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h1>Lista de Ventas</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for venta in ventas %}
+        <tr>
+          <td>{{ venta.fecha }}</td>
+          <td>{{ venta.total }}</td>
+          <td>
+            <form
+              action="{% url 'eliminar_venta' venta.id %}"
+              method="POST"
+              style="display: inline"
+              onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta venta?');"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+{% endblock %}

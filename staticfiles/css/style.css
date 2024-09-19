@@ -1,0 +1,12 @@
+.cantidad-input-group {
+    max-width: 150px;
+    /* Establece un ancho máximo para la barra */
+    width: 150px;
+    /* Establece un ancho fijo para la barra */
+}
+
+.cantidad-input-group input {
+    width: 50px;
+    /* Establece un ancho fijo para el campo de cantidad */
+}
+body{background-color: black;}

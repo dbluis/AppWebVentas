@@ -1,0 +1,19 @@
+{% extends "layout/base.html" %} {% block content %}
+
+<main class="container my-4">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <form
+        method="POST"
+        class="card card-body my-3"
+        action="{% url 'agregar_bebida' %}"
+      >
+        <h1 class="text-center">Crear Producto</h1>
+        {{error}} {% csrf_token %} {{form}}
+        <button class="btn btn-dark my-2">Guardar</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

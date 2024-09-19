@@ -1,0 +1,41 @@
+{% extends "layout/base.html" %} {% block content %}
+
+<main class="container py-3 my-3">
+  <section class="card card-body">
+    <h1 class="h1 text-center">
+      ¡ Bienvenidos a la app web para gestionar su negocio !
+    </h1>
+    <h6 class="text-center lh-sm py-3">
+      En esta web, encontrará diferentes métodos para gestionar su negocio con
+      mayor eficiencia. <br />
+      <br />
+      <blockquote>
+        "Ingrese su usuario para acceder a la plataforma."
+      </blockquote>
+      <br />
+      Una vez dentro, dispondrá de diversas opciones que le serán de utilidad:
+      <br />
+      En la sección de Productos, tiene la opción de Vender, donde podrá
+      realizar sus ventas <br />
+      agregar productos al carrito y luego almacenar la venta. <br />
+      También encontrará dos apartados distintos: Ventas y Gastos <br />
+      En estos, podrá visualizar la cantidad de ventas que ha realizado y los
+      gastos que ha tenido. </br> </br>
+      Cualquier duda no dude en cosultar al personal de servicio tecnico
+    </h6>
+    {% if user.is_authenticated %}
+    <h3 class="text-center">Lista de productos</h3>
+    <div class="d-grid gap-2 col-6 mx-auto py-3">
+      <a
+        class="btn btn-dark"
+        role="button"
+        aria-disabled="true"
+        href="{% url 'listar_bebidas' %}"
+        >¡Dale click aqui!</a
+      >
+    </div>
+    {% endif %}
+  </section>
+</main>
+
+{% endblock %}

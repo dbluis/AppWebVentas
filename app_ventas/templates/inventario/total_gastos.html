@@ -1,0 +1,30 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h1>Total de Gastos del Día</h1>
+    <form method="get" action="">
+      {{ formd.as_p }}
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <p>
+      <strong
+        >Total Gastado el {{ formd.date.value|date:"d de F de Y" }}:</strong
+      >
+      ${{ gastos_dia }}
+    </p>
+  </section>
+  <section class="card card-body my-3">
+    <h1>Total de Gastos del Mes</h1>
+    <form method="get" action="">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <p>
+      <strong
+        >Total Gastado en {{ form.month.value }} de {{ form.year.value }}:
+      </strong>
+      ${{ gastos_mes }}
+    </p>
+  </section>
+</main>
+{% endblock %}

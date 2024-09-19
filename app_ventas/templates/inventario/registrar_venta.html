@@ -1,0 +1,49 @@
+{% extends "layout/base.html" %} {% block content %}
+<main class="container py-5">
+  <section class="card card-body">
+    <h1>Lista de Bebidas</h1>
+    <form
+      class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+      method="GET"
+    >
+      {% csrf_token %}
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control bg-light border-0 small"
+          placeholder="Buscar..."
+          name="buscar"
+          value=""
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-primary" type="submit">Buscar</button>
+        </div>
+      </div>
+    </form>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bebida in bebidas %}
+        <tr>
+          <td><b>{{bebida.nombre|capfirst}}</b></td>
+          <td>{{bebida.precio}}</td>
+          <td>
+            <form action="{% url 'editar_bebida' bebida.id %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-dark">Editar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+{% endblock content %}

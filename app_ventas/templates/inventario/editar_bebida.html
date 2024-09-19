@@ -1,0 +1,72 @@
+{% extends "layout/base.html" %} {% block content %}
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <form
+        method="post"
+        action="{% url 'editar_bebida' bebida.id %}"
+        class="card card-body"
+      >
+        <h1>Modificar Producto</h1>
+        {% csrf_token %}
+
+        <div style="margin-bottom: 10px">
+          <label for="id_nombre">Nombre:</label>
+          <input
+            type="text"
+            name="nombre"
+            id="id_nombre"
+            value="{{ form.nombre.value|default:bebida.nombre }}"
+            class="form-control"
+          />
+        </div>
+
+        <div style="margin-bottom: 10px">
+          <label for="id_descripcion">Descripcion:</label>
+          <input
+            type="text"
+            name="descripcion"
+            id="id_descripcion"
+            value="{{ form.descripcion.value|default:bebida.descripcion }}"
+            class="form-control"
+          />
+        </div>
+
+        <div style="margin-bottom: 10px">
+          <label for="id_precio">Precio:</label>
+          <input
+            type="number"
+            name="precio"
+            id="id_precio"
+            value="{{ form.precio.value|default:bebida.precio }}"
+            class="form-control"
+          />
+        </div>
+
+        <div style="margin-bottom: 10px">
+          <label for="id_stock">Stock:</label>
+          <input
+            type="number"
+            name="stock"
+            id="id_stock"
+            value="{{ form.stock.value|default:bebida.stock }}"
+            class="form-control"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-dark">Guardar</button>
+      </form>
+      <form
+        action="{% url 'eliminar_bebida' bebida.id %}"
+        method="POST"
+        onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');"
+      >
+        {% csrf_token %}
+        <button class="btn btn-danger card card-body my-2">Eliminar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
