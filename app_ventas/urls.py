@@ -29,6 +29,7 @@ urlpatterns = [
     path("crearUser/", views.crearUser, name="crearUser"),
     path("signout/", views.signout, name="signout"),
     path("signin/", views.signin, name="signin"),
+    path("crearSuperUser/", views.crearSuperUser, name="crearSuperUser"),
     # Carrito
     path('carrito/agregar/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('carrito/eliminar/', views.eliminar_del_carrito,

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import matplotlib.dates as mdates
 from io import BytesIO
@@ -70,6 +71,33 @@ def crearUser(request):
                 return render(request, "user/crearUser.html", {"error": "El usuario ya existe"})
 
 
+def crearSuperUser(request):
+    if request.method == "GET":
+        return render(request, "user/crearSuperUser.html")
+    else:
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        es_superusuario = request.POST.get('superuser')
+        if password1 == password2:
+            if password1 == password2:
+                try:
+                    user = User.objects.create_user(
+                        username=username, password=password1)
+                    if es_superusuario:
+                        user.is_superuser = True
+                        user.is_staff = True
+                    user.save()
+                    messages.success(
+                        request, "Superusuario creado exitosamente.")
+                    return redirect('login')  # Redirigir a la página de login
+                except Exception as e:
+                    messages.error(request, f"Error: {e}")
+        else:
+            messages.error(request, "Las contraseñas no coinciden.")
+    return render(request, 'user/crearSuperUser.html')
+
+
 def signout(request):
     logout(request)
     return redirect('index')
@@ -82,7 +110,7 @@ def signin(request):
         user = authenticate(
             request, username=request.POST["username"], password=request.POST["password"])
         if user is None:
-            return render(request, "user/signin.html", {"error": "El usuario o contraseña no coinciden"})
+            return render(request, "user/signin.html", {"error": "El usuario o contraseña no coinciden. O necesita abonar el servicio"})
         else:
             login(request, user)
             return redirect('listar_bebidas')
@@ -679,7 +707,6 @@ def completar_compra(request):
         item.subtotal() for item in carrito.items.all()))
     for item in carrito.items.all():
         bebida = item.bebida
-        bebida.stock -= item.cantidad
         bebida.save()
         DetalleVenta.objects.create(
             venta=venta, bebida=bebida, cantidad=item.cantidad, precio=item.precio)
