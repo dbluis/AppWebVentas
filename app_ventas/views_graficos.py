@@ -6,16 +6,18 @@ from datetime import datetime
 from django.utils import timezone
 from django.db.models.functions import ExtractMonth
 from django.db.models.functions import ExtractDay
-from calendar import monthrange
+from calendar import monthrange, month_name
 import locale
+
+meses_en_espanol = [
+    '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+]
 
 
 @login_required
 def ver_ventas_mensuales(request):
     usuario = request.user
-
-    # Establecer la localización en español
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
     # Obtener el mes y año desde la solicitud GET, o usar los valores actuales por defecto
     mes_actual = int(request.GET.get('mes', timezone.now().month))
@@ -42,13 +44,14 @@ def ver_ventas_mensuales(request):
         # Convertir a float para el formato de Highcharts
         ventas_data.append([str(dia), float(total)])
 
-    # Ajustar el título según el mes y año seleccionados en español
-    titulo = f'Ventas del Mes de {timezone.datetime(
-        año_actual, mes_actual, 1).strftime("%B")} {año_actual}'
-
-    # Obtener los nombres de los meses y los años disponibles
+    # Diccionario de nombres de meses en español
     months = {1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
               7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'}
+
+    # Ajustar el título según el mes y año seleccionados en español
+    titulo = f'Ventas del Mes de {months[mes_actual]} {año_actual}'
+
+    # Obtener los años disponibles
     available_years = range(2020, timezone.now().year + 1)
 
     return render(request, 'inventario/graficos/ventas_mensual.html', {
@@ -65,9 +68,6 @@ def ver_ventas_mensuales(request):
 @login_required
 def ver_gastos_mensuales(request):
     usuario = request.user
-
-    # Establecer la localización en español
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
     # Obtener el mes y año desde la solicitud GET, o usar los valores actuales por defecto
     mes_actual = int(request.GET.get('mes', timezone.now().month))
@@ -93,14 +93,14 @@ def ver_gastos_mensuales(request):
                      for gasto in gastos_por_dia if gasto['dia'] == dia), 0)
         gastos_data.append([str(dia), float(total)])
 
-    # Ajustar el título según el mes y año seleccionados en español
-    nombre_mes_espanol = timezone.datetime(
-        año_actual, mes_actual, 1).strftime("%B").capitalize()
-    titulo = f'Gastos del Mes de {nombre_mes_espanol} {año_actual}'
-
-    # Obtener los nombres de los meses y los años disponibles
+    # Diccionario de nombres de meses en español
     months = {1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
               7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'}
+
+    # Ajustar el título según el mes y año seleccionados en español
+    titulo = f'Gastos del Mes de {months[mes_actual]} {año_actual}'
+
+    # Obtener los nombres de los meses y los años disponibles
     available_years = range(2020, timezone.now().year + 1)
 
     return render(request, 'inventario/graficos/gastos_mensuales.html', {
